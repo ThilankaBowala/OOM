@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<setOfServers>
+    <method id="bubbleSort">
+		<serverName>Server1</serverName>
+		<portNumber>60001</portNumber>
+    </method>
+    
+    <method id="insertionSort">
+		<serverName>Server2</serverName>
+		<portNumber>60002</portNumber>
+    </method>
+    
+    <method id="selectionSort">
+		<serverName>Server3</serverName>
+		<portNumber>60003</portNumber>
+    </method>
+    
+    <method id="quickSort">
+		<serverName>Server4</serverName>
+		<portNumber>60004</portNumber>
+    </method>
+</setOfServers>

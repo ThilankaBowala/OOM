@@ -1,6 +1,7 @@
 package middleware;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -13,6 +14,12 @@ import java.net.Socket;
 public class Server4 {
 
     static int[] results;
+    static ServerSocket socketWithServerSkeleton;
+    static Socket connectToServerSkeleton;
+    static OutputStream outWithServerSkeleton;
+    static BufferedReader inWithServerSkeleton;
+    static String request;
+    static String parameterString;
 
     public static void quickSort(int[] toSort) {
         results = toSort;
@@ -54,22 +61,26 @@ public class Server4 {
     }
     
     
+    static void getRequestFromServerSkeleton() throws IOException {
+        socketWithServerSkeleton = new ServerSocket(60004);
+        connectToServerSkeleton = socketWithServerSkeleton.accept();
+        outWithServerSkeleton = connectToServerSkeleton.getOutputStream();
+        inWithServerSkeleton = new BufferedReader(new InputStreamReader(connectToServerSkeleton.getInputStream()));
+
+        request = inWithServerSkeleton.readLine();
+    }
+
+    static void sendResponceToServerSkeleton() throws IOException {
+        //message to ServerSkeleton : 
+        outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
+    }
+
     public static void main(String args[]) {
-        ServerSocket c;
-        Socket cs;
-        OutputStream out;
-        BufferedReader in;
-        String name;
-        String parameterString;
 
         try {
-            c = new ServerSocket(60004);
-            cs = c.accept();
-            out = cs.getOutputStream();
-            in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-
-            name = in.readLine();//////////////////////////////////
-            parameterString = in.readLine();///////////////////////
+            getRequestFromServerSkeleton();
+            parameterString = request;
+            parameterString = parameterString.replace(null, "quickSort"); // not sure
 
             String[] items = parameterString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
             int[] parameter = new int[items.length];
@@ -78,18 +89,15 @@ public class Server4 {
                 try {
                     parameter[i] = Integer.parseInt(items[i]);
                 } catch (NumberFormatException nfe) {
+                    System.out.println(nfe);
                 }
             }
 
-            if ("quickSort".equals(name)) {
-                quickSort(parameter);
-            }
-
-            out.write(results.toString().getBytes(), 0, results.length);
+            quickSort(parameter);
+            sendResponceToServerSkeleton();
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
     }
 }

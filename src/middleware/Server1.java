@@ -10,6 +10,12 @@ import java.net.*;
 public class Server1 {
 
     static int[] results;
+    static ServerSocket socketWithServerSkeleton;
+    static Socket connectToServerSkeleton;
+    static OutputStream outWithServerSkeleton;
+    static BufferedReader inWithServerSkeleton;
+    static String request;
+    static String parameterString;
 
     static void bubbleSort(int[] toSort) {
         results = toSort;
@@ -27,22 +33,26 @@ public class Server1 {
         }
     }
 
+    static void getRequestFromServerSkeleton() throws IOException {
+        socketWithServerSkeleton = new ServerSocket(60001);
+        connectToServerSkeleton = socketWithServerSkeleton.accept();
+        outWithServerSkeleton = connectToServerSkeleton.getOutputStream();
+        inWithServerSkeleton = new BufferedReader(new InputStreamReader(connectToServerSkeleton.getInputStream()));
+
+        request = inWithServerSkeleton.readLine();
+    }
+
+    static void sendResponceToServerSkeleton() throws IOException {
+        //message to ServerSkeleton : 
+        outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
+    }
+
     public static void main(String args[]) {
-        ServerSocket c;
-        Socket cs;
-        OutputStream out;
-        BufferedReader in;
-        String name;
-        String parameterString;
 
         try {
-            c = new ServerSocket(60001);
-            cs = c.accept();
-            out = cs.getOutputStream();
-            in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-
-            name = in.readLine();//////////////////////////////////
-            parameterString = in.readLine();///////////////////////
+            getRequestFromServerSkeleton();
+            parameterString = request;
+            parameterString = parameterString.replace(null, "bubbleSort"); // not sure
 
             String[] items = parameterString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
             int[] parameter = new int[items.length];
@@ -51,18 +61,15 @@ public class Server1 {
                 try {
                     parameter[i] = Integer.parseInt(items[i]);
                 } catch (NumberFormatException nfe) {
+                    System.out.println(nfe);
                 }
             }
 
-            if ("bubbleSort".equals(name)) {
-                bubbleSort(parameter);
-            }
-
-            out.write(results.toString().getBytes(), 0, results.length);
+            bubbleSort(parameter);
+            sendResponceToServerSkeleton();
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
     }
 }

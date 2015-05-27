@@ -1,6 +1,7 @@
 package middleware;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -11,7 +12,14 @@ import java.net.Socket;
  * @author 2012cs024
  */
 public class Server3 {
+    
     static int[] results;
+    static ServerSocket socketWithServerSkeleton;
+    static Socket connectToServerSkeleton;
+    static OutputStream outWithServerSkeleton;
+    static BufferedReader inWithServerSkeleton;
+    static String request;
+    static String parameterString;
     
     static void selectionSort(int[] toSort){
         results = toSort;
@@ -30,22 +38,26 @@ public class Server3 {
     }
     
     
+    static void getRequestFromServerSkeleton() throws IOException {
+        socketWithServerSkeleton = new ServerSocket(60003);
+        connectToServerSkeleton = socketWithServerSkeleton.accept();
+        outWithServerSkeleton = connectToServerSkeleton.getOutputStream();
+        inWithServerSkeleton = new BufferedReader(new InputStreamReader(connectToServerSkeleton.getInputStream()));
+
+        request = inWithServerSkeleton.readLine();
+    }
+
+    static void sendResponceToServerSkeleton() throws IOException {
+        //message to ServerSkeleton : 
+        outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
+    }
+
     public static void main(String args[]) {
-        ServerSocket c;
-        Socket cs;
-        OutputStream out;
-        BufferedReader in;
-        String name;
-        String parameterString;
 
         try {
-            c = new ServerSocket(60003);
-            cs = c.accept();
-            out = cs.getOutputStream();
-            in = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-
-            name = in.readLine();//////////////////////////////////
-            parameterString = in.readLine();///////////////////////
+            getRequestFromServerSkeleton();
+            parameterString = request;
+            parameterString = parameterString.replace(null, "selectionSort"); // not sure
 
             String[] items = parameterString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
             int[] parameter = new int[items.length];
@@ -54,18 +66,15 @@ public class Server3 {
                 try {
                     parameter[i] = Integer.parseInt(items[i]);
                 } catch (NumberFormatException nfe) {
+                    System.out.println(nfe);
                 }
             }
 
-            if ("selectionSort".equals(name)) {
-                selectionSort(parameter);
-            }
-
-            out.write(results.toString().getBytes(), 0, results.length);
+            selectionSort(parameter);
+            sendResponceToServerSkeleton();
 
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
     }
 }

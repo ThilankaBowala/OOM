@@ -17,10 +17,12 @@ public class BusinessLogicLayer {
     static String portNumber;
     static String methodName;
 
-    static void readXML() {
+    static String readXML(String requiredMethod) {
+        methodName = requiredMethod;
+        
         try {
 
-            File fXmlFile = new File("/ServerData.xml");
+            File fXmlFile = new File("ServerData.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(fXmlFile);
@@ -42,9 +44,8 @@ public class BusinessLogicLayer {
         } catch (Exception e) {
             System.out.println(e);
         }
+        
+        return portNumber;
     }
     
-    
-    public static void main(String argv[]) {
-    }
 }

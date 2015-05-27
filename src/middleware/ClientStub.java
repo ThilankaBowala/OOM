@@ -14,7 +14,7 @@ public class ClientStub {
     static Socket connectToClient, connectToServer;
     static OutputStream outWithClient, outWithServer;
     static BufferedReader inWithClient, inWithServer;
-    static String request, name, messageToServer, result;
+    static String request, name, messageToServer, response;
     static int parameter;
 
     static void getRequestsFromClient() throws IOException {
@@ -25,36 +25,25 @@ public class ClientStub {
         inWithClient = new BufferedReader(new InputStreamReader(connectToClient.getInputStream()));
         
         request = inWithClient.readLine();
-
-//        name = inWithClient.readLine();
-//        parameter = Integer.parseInt(inWithClient.readLine());
-
-//            if ("bubbleSort".equals(name)) {
-//                bubbleSort(parameter);
-//            }else if ("insertionSort".equals(name)) {
-//                insertionSort(parameter);
-//            }else if ("selectionSort".equals(name)) {
-//                selectionSort(parameter);
-//            }else if ("quickSort".equals(name)) {
-//                quickSort(parameter);
-//            }        
-
     }
 
-    static void sendRequestsToServer() throws IOException {
+    static void sendRequestsToServerSkeleton() throws IOException {
 
         connectToServer = new Socket("localhost", 5556);
         outWithServer = connectToServer.getOutputStream();
         inWithServer = new BufferedReader(new InputStreamReader(connectToServer.getInputStream()));
 
-        //messageToServer = 
+        //message to ServerSkeleton = 
         outWithServer.write(request.getBytes(), 0, request.length());     //marshalling and send         
     }
 
-    static void getResponseFromServer() {
+    static void getResponseFromServerSkeleton() throws IOException {
+        response = inWithServer.readLine();
     }
 
-    static void sendResponseToClient() {
+    static void sendResponseToClient() throws IOException {
+        //message to Client = 
+        outWithClient.write(response.getBytes(), 0, response.length());
     }
 
     public static void main(String[] args) {
@@ -62,8 +51,8 @@ public class ClientStub {
         try {
             synchronized (ClientStub.class) {
                 getRequestsFromClient();
-                sendRequestsToServer();
-                getResponseFromServer();
+                sendRequestsToServerSkeleton();
+                getResponseFromServerSkeleton();
                 sendResponseToClient();
             }
         } catch (Exception ex) {

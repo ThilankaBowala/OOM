@@ -39,6 +39,16 @@ public class ServerSkeleton {
         }
         portNumber = Integer.parseInt(BusinessLogicLayer.readXML(methodName));
     }
+    
+    /*static void setData() {
+        String[] input = request.split(",");
+        methodName = input[0];
+
+        messageToServer = "";
+        for (int j = 1; j < input.length; j++) {
+            messageToServer = messageToServer + input[j] + ",";
+        }
+    }*/
 
     static void sendRequestToServer() throws IOException {
         connectToServer = new Socket("localhost", portNumber);

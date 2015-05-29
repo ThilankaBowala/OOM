@@ -92,6 +92,15 @@ public class Server4 {
                     System.out.println(nfe);
                 }
             }
+            
+            /*parameterString = in.readLine();
+            System.out.println("get data");
+            
+
+            String[] items = parameterString.split(",");
+            int[] parameter = new int[items.length];
+
+            */
 
             quickSort(parameter);
             sendResponceToServerSkeleton();

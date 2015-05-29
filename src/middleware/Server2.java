@@ -67,6 +67,20 @@ public class Server2 {
                     System.out.println(nfe);
                 }
             }
+            
+            /*parameterString = in.readLine();
+            System.out.println("get data");
+            
+
+            String[] items = parameterString.split(",");
+            int[] parameter = new int[items.length];
+
+            for (int i = 0; i < items.length; i++) {
+                try {
+                    parameter[i] = Integer.parseInt(items[i]);
+                } catch (NumberFormatException nfe) {
+                }
+            }*/
 
             insertionSort(parameter);
             sendResponceToServerSkeleton();

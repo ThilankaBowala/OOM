@@ -7,7 +7,7 @@ import java.net.*;
  *
  * @author 2012cs024
  */
-public class Server1 {
+public class Server1 extends Thread {
 
     static int[] results;
     static ServerSocket socketWithServerSkeleton;
@@ -33,11 +33,12 @@ public class Server1 {
         }
     }
 
-    static void getRequestFromServerSkeleton() throws IOException {
+    static void getRequestFromServerSkeleton() throws IOException, InterruptedException {
         socketWithServerSkeleton = new ServerSocket(60001);
         connectToServerSkeleton = socketWithServerSkeleton.accept();
         outWithServerSkeleton = connectToServerSkeleton.getOutputStream();
         inWithServerSkeleton = new BufferedReader(new InputStreamReader(connectToServerSkeleton.getInputStream()));
+
 
         request = inWithServerSkeleton.readLine();
     }
@@ -47,10 +48,12 @@ public class Server1 {
         outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
     }
 
-    public static void main(String args[]) {
+    @Override
+    public void run() {
 
         try {
             getRequestFromServerSkeleton();
+
             parameterString = request;
             parameterString = parameterString.replace(null, "bubbleSort"); // not sure
 
@@ -64,20 +67,20 @@ public class Server1 {
                     System.out.println(nfe);
                 }
             }
-            
+
             /*parameterString = in.readLine();
-            System.out.println("get data");
+             System.out.println("get data");
 
-            String[] items = parameterString.split(",");
-            int[] parameter = new int[items.length];
+             String[] items = parameterString.split(",");
+             int[] parameter = new int[items.length];
 
-            */
+             */
 
             bubbleSort(parameter);
             sendResponceToServerSkeleton();
 
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println(ex + " s1");
         }
     }
 }

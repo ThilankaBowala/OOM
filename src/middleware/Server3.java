@@ -11,8 +11,8 @@ import java.net.Socket;
  *
  * @author 2012cs024
  */
-public class Server3 {
-    
+public class Server3 extends Thread {
+
     static int[] results;
     static ServerSocket socketWithServerSkeleton;
     static Socket connectToServerSkeleton;
@@ -20,24 +20,24 @@ public class Server3 {
     static BufferedReader inWithServerSkeleton;
     static String request;
     static String parameterString;
-    
-    static void selectionSort(int[] toSort){
+
+    static void selectionSort(int[] toSort) {
         results = toSort;
-        
-        for (int i = 0; i < results.length - 1; i++)
-        {
+
+        for (int i = 0; i < results.length - 1; i++) {
             int index = i;
-            for (int j = i + 1; j < results.length; j++)
-                if (results[j] < results[index])
+            for (int j = i + 1; j < results.length; j++) {
+                if (results[j] < results[index]) {
                     index = j;
-      
-            int smallerNumber = results[index]; 
+                }
+            }
+
+            int smallerNumber = results[index];
             results[index] = results[i];
             results[i] = smallerNumber;
         }
     }
-    
-    
+
     static void getRequestFromServerSkeleton() throws IOException {
         socketWithServerSkeleton = new ServerSocket(60003);
         connectToServerSkeleton = socketWithServerSkeleton.accept();
@@ -52,7 +52,8 @@ public class Server3 {
         outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
     }
 
-    public static void main(String args[]) {
+    @Override
+    public void run() {
 
         try {
             getRequestFromServerSkeleton();
@@ -69,15 +70,15 @@ public class Server3 {
                     System.out.println(nfe);
                 }
             }
-            
+
             /*parameterString = in.readLine();
-            System.out.println("get data");
+             System.out.println("get data");
             
 
-            String[] items = parameterString.split(",");
-            int[] parameter = new int[items.length];
+             String[] items = parameterString.split(",");
+             int[] parameter = new int[items.length];
 
-            */
+             */
 
             selectionSort(parameter);
             sendResponceToServerSkeleton();

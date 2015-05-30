@@ -7,15 +7,15 @@ import java.net.*;
  *
  * @author Thilanka Bowala <Thilanka Bowala at GIGABYTE>
  */
-public class ServerSkeleton {
+public class ServerSkeleton extends Thread {
 
     static String methodName;
     static ServerSocket socketWithClient;
     static Socket connectToClient, connectToServer;
     static OutputStream outWithClient, outWithServer;
     static BufferedReader inWithClient, inWithServer;
-    static String request, name, response;
-    static int portNumber, parameter;
+    static String request, response;
+    static int portNumber;
 
     static void getRequestFromClientStub() throws IOException {
         socketWithClient = new ServerSocket(5556);
@@ -39,17 +39,16 @@ public class ServerSkeleton {
         }
         portNumber = Integer.parseInt(BusinessLogicLayer.readXML(methodName));
     }
-    
+
     /*static void setData() {
-        String[] input = request.split(",");
-        methodName = input[0];
+     String[] input = request.split(",");
+     methodName = input[0];
 
-        messageToServer = "";
-        for (int j = 1; j < input.length; j++) {
-            messageToServer = messageToServer + input[j] + ",";
-        }
-    }*/
-
+     messageToServer = "";
+     for (int j = 1; j < input.length; j++) {
+     messageToServer = messageToServer + input[j] + ",";
+     }
+     }*/
     static void sendRequestToServer() throws IOException {
         connectToServer = new Socket("localhost", portNumber);
         outWithServer = connectToServer.getOutputStream();
@@ -68,7 +67,9 @@ public class ServerSkeleton {
         outWithClient.write(response.getBytes(), 0, response.length());     //marshalling and send
     }
 
-    public static void main(String args[]) {
+    @Override
+    public void run() {
+
         try {
             synchronized (ClientStub.class) {
                 getRequestFromClientStub();
@@ -78,7 +79,7 @@ public class ServerSkeleton {
                 sendResponceToClientStub();
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println(ex + "ss");
         }
     }
 }

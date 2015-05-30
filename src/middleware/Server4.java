@@ -11,7 +11,7 @@ import java.net.Socket;
  *
  * @author 2012cs024
  */
-public class Server4 {
+public class Server4 extends Thread {
 
     static int[] results;
     static ServerSocket socketWithServerSkeleton;
@@ -59,8 +59,7 @@ public class Server4 {
         results[left] = results[right];
         results[right] = temp;
     }
-    
-    
+
     static void getRequestFromServerSkeleton() throws IOException {
         socketWithServerSkeleton = new ServerSocket(60004);
         connectToServerSkeleton = socketWithServerSkeleton.accept();
@@ -75,7 +74,8 @@ public class Server4 {
         outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
     }
 
-    public static void main(String args[]) {
+    @Override
+    public void run() {
 
         try {
             getRequestFromServerSkeleton();
@@ -92,15 +92,15 @@ public class Server4 {
                     System.out.println(nfe);
                 }
             }
-            
+
             /*parameterString = in.readLine();
-            System.out.println("get data");
+             System.out.println("get data");
             
 
-            String[] items = parameterString.split(",");
-            int[] parameter = new int[items.length];
+             String[] items = parameterString.split(",");
+             int[] parameter = new int[items.length];
 
-            */
+             */
 
             quickSort(parameter);
             sendResponceToServerSkeleton();

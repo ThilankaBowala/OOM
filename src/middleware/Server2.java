@@ -11,8 +11,8 @@ import java.net.Socket;
  *
  * @author 2012cs024
  */
-public class Server2 {
-    
+public class Server2 extends Thread {
+
     static int[] results;
     static ServerSocket socketWithServerSkeleton;
     static Socket connectToServerSkeleton;
@@ -20,11 +20,11 @@ public class Server2 {
     static BufferedReader inWithServerSkeleton;
     static String request;
     static String parameterString;
-    
-    static void insertionSort(int[] toSort){
+
+    static void insertionSort(int[] toSort) {
         results = toSort;
-        
-        for (int i=1; i < results.length; i++) {
+
+        for (int i = 1; i < results.length; i++) {
             int next = results[i];
             int j = i;
             while (j > 0 && results[j - 1] > next) {
@@ -34,8 +34,7 @@ public class Server2 {
             results[j] = next;
         }
     }
-    
-    
+
     static void getRequestFromServerSkeleton() throws IOException {
         socketWithServerSkeleton = new ServerSocket(60002);
         connectToServerSkeleton = socketWithServerSkeleton.accept();
@@ -50,7 +49,8 @@ public class Server2 {
         outWithServerSkeleton.write(results.toString().getBytes(), 0, results.length);
     }
 
-    public static void main(String args[]) {
+    @Override
+    public void run() {
 
         try {
             getRequestFromServerSkeleton();
@@ -67,15 +67,15 @@ public class Server2 {
                     System.out.println(nfe);
                 }
             }
-            
+
             /*parameterString = in.readLine();
-            System.out.println("get data");
+             System.out.println("get data");
             
 
-            String[] items = parameterString.split(",");
-            int[] parameter = new int[items.length];
+             String[] items = parameterString.split(",");
+             int[] parameter = new int[items.length];
 
-            */
+             */
 
             insertionSort(parameter);
             sendResponceToServerSkeleton();

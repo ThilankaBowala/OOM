@@ -7,24 +7,25 @@ import java.net.*;
  *
  * @author Thilanka Bowala <Thilanka Bowala at GIGABYTE>
  */
-public class ClientStub {
+public class ClientStub extends Thread {
 
-    //static int[] toSort;
     static ServerSocket socketWithClient;
     static Socket connectToClient, connectToServer;
     static OutputStream outWithClient, outWithServer;
     static BufferedReader inWithClient, inWithServer;
-    static String request, name, messageToServer, response;
-    static int parameter;
+    static String request, response;
 
     static void getRequestsFromClient() throws IOException {
 
         socketWithClient = new ServerSocket(5555);
         connectToClient = socketWithClient.accept();
+        System.out.println("Connected to Client");
         outWithClient = connectToClient.getOutputStream();
         inWithClient = new BufferedReader(new InputStreamReader(connectToClient.getInputStream()));
         
+
         request = inWithClient.readLine();
+        System.out.println("Got request from Client : " + request);
     }
 
     static void sendRequestsToServerSkeleton() throws IOException {
@@ -34,7 +35,8 @@ public class ClientStub {
         inWithServer = new BufferedReader(new InputStreamReader(connectToServer.getInputStream()));
 
         //message to ServerSkeleton = 
-        outWithServer.write(request.getBytes(), 0, request.length());     //marshalling and send         
+        outWithServer.write(request.getBytes(), 0, request.length());     //marshalling and send      
+        System.out.println("dddddddd");
     }
 
     static void getResponseFromServerSkeleton() throws IOException {
@@ -46,7 +48,8 @@ public class ClientStub {
         outWithClient.write(response.getBytes(), 0, response.length());
     }
 
-    public static void main(String[] args) {
+    @Override
+    public void run() {
 
         try {
             synchronized (ClientStub.class) {
@@ -56,7 +59,7 @@ public class ClientStub {
                 sendResponseToClient();
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println(ex + " cs");
         }
     }
 }

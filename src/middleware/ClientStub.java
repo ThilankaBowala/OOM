@@ -23,8 +23,9 @@ public class ClientStub extends Thread {
         outWithClient = connectToClient.getOutputStream();
         inWithClient = new BufferedReader(new InputStreamReader(connectToClient.getInputStream()));
         
-
+        
         request = inWithClient.readLine();
+        
         System.out.println("Got request from Client : " + request);
     }
 

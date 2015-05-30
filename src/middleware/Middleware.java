@@ -22,17 +22,18 @@ public class Middleware {
         s2.setPriority(1);
         s2.setPriority(1);
 
-        ss.setPriority(2);
-        cs.setPriority(3);
-        c1.setPriority(4);
+        ss.setPriority(1);
+        cs.setPriority(1);
+        c1.setPriority(1);
 
         s1.start();
         s2.start();
         s3.start();
         s4.start();
         ss.start();
-        cs.start();
         c1.start();
+        cs.start();
+       
 
     }
 }
